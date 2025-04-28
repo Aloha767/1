@@ -9,14 +9,23 @@ function onYouTubeIframeAPIReady() {
         height: '100%',
         width: '100%',
         videoId: 'M7lc1UVf-VE', // Тестовое видео
+        playerVars: {
+            'playsinline': 1 // Для корректной работы на iOS
+        },
         events: {
-            'onReady': onPlayerReady
+            'onReady': onPlayerReady,
+            'onError': onPlayerError
         }
     });
 }
 
 function onPlayerReady(event) {
-    // Плеер готов
+    console.log('YouTube плеер готов');
+}
+
+function onPlayerError(error) {
+    console.error('Ошибка YouTube плеера:', error);
+    alert('Ошибка загрузки YouTube плеера. Проверьте консоль.');
 }
 
 // Поиск видео
@@ -90,6 +99,8 @@ ymaps.ready(() => {
         center: [55.7558, 37.6173], // Москва
         zoom: 13,
         controls: ['zoomControl', 'geolocationControl', 'searchControl']
+    }, {
+        suppressMapOpenBlock: true // Отключаем лишние элементы интерфейса
     });
 
     // Настройка поиска
@@ -115,6 +126,9 @@ ymaps.ready(() => {
             map.setCenter(coords, 15);
         });
     });
+}).catch(error => {
+    console.error('Ошибка инициализации Яндекс.Карт:', error);
+    alert('Ошибка загрузки Яндекс.Карт. Проверьте консоль.');
 });
 
 // Инициализация

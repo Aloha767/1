@@ -1,80 +1,108 @@
-body {
+html, body {
     margin: 0;
+    padding: 0;
     font-family: -apple-system, BlinkMacSystemFont, sans-serif;
     background: #f5f5f7 !important; /* Светлый фон iOS */
     color: #1d1d1f !important;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden; /* Убираем лишние полосы прокрутки */
 }
 
 .container {
-    display: flex;
-    height: 100vh;
-    width: 100vw;
-    margin: 0;
+    display: flex !important;
+    flex-direction: row !important; /* Окна рядом */
+    justify-content: center !important; /* Центрируем окна */
+    align-items: stretch !important; /* Растягиваем по высоте */
+    height: 100vh !important;
+    width: 100vw !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+    background: #f5f5f7 !important; /* Светлый фон для контейнера */
 }
 
 .youtube-section, .map-section {
-    flex: 1; /* Равное распределение пространства */
-    padding: 20px;
-    box-sizing: border-box;
-    overflow-y: auto;
-    background: #ffffff !important;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    flex: 1 1 50% !important; /* Каждое окно ровно 50% */
+    max-width: 50% !important; /* Ограничиваем ширину */
+    min-width: 0 !important; /* Предотвращаем переполнение */
+    padding: 20px !important;
+    box-sizing: border-box !important;
+    overflow-y: auto !important; /* Прокрутка внутри секции */
+    background: #ffffff !important; /* Белый фон секций */
+    border-radius: 10px !important;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1) !important;
+    margin: 10px !important; /* Отступы для визуального разделения */
 }
 
 .youtube-section {
-    border-right: 1px solid #e0e0e0;
+    border-right: 1px solid #e0e0e0 !important;
 }
 
 h2 {
-    font-size: 1.5rem;
-    color: #1d1d1f;
+    font-size: 1.5rem !important;
+    color: #1d1d1f !important;
+    margin-bottom: 10px !important;
+    text-align: center !important; /* Центрируем заголовки */
 }
 
 input, button {
-    border-radius: 8px;
-    padding: 10px;
-    margin: 5px 0;
+    border-radius: 8px !important;
+    padding: 10px !important;
+    margin: 5px 0 !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
 }
 
 #player, #map {
-    height: 300px;
-    border-radius: 8px;
-    margin-top: 10px;
+    height: 300px !important;
+    border-radius: 8px !important;
+    margin-top: 10px !important;
+    width: 100% !important; /* Убедимся, что плеер и карта занимают всю ширину */
 }
 
 #map {
-    height: 80vh;
+    height: 80vh !important; /* Карта занимает доступное пространство */
 }
 
 button {
-    background: #007aff; /* Синий в стиле iOS */
-    color: white;
-    border: none;
-    cursor: pointer;
+    background: #007aff !important; /* Синий в стиле iOS */
+    color: white !important;
+    border: none !important;
+    cursor: pointer !important;
 }
 
 button:hover {
-    background: #005bb5;
+    background: #005bb5 !important;
 }
 
 #videoList li {
-    cursor: pointer;
-    padding: 10px;
-    border-bottom: 1px solid #e0e0e0;
+    cursor: pointer !important;
+    padding: 10px !important;
+    border-bottom: 1px solid #e0e0e0 !important;
 }
 
 #videoList li:hover {
-    background: #f5f5f7;
+    background: #f5f5f7 !important;
 }
 
 @media (max-width: 768px) {
     .container {
-        flex-direction: column;
+        flex-direction: column !important; /* На мобильных окна друг под другом */
+        align-items: center !important;
     }
     .youtube-section, .map-section {
-        width: 100%;
-        height: 50vh;
-        border-radius: 10px;
+        flex: none !important; /* Отключаем flex: 1 */
+        max-width: 100% !important; /* Каждое окно занимает всю ширину */
+        width: 100% !important;
+        height: 50vh !important; /* Каждое окно занимает половину высоты */
+        margin: 5px 0 !important; /* Отступы сверху и снизу */
+    }
+    .youtube-section {
+        border-right: none !important;
+        border-bottom: 1px solid #e0e0e0 !important; /* Разделяем окна на мобильных */
+    }
+    #map {
+        height: 40vh !important; /* Уменьшаем высоту карты на мобильных */
     }
 }
