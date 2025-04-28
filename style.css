@@ -1,33 +1,29 @@
 body {
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-    background: #f5f5f7; /* Светлый фон в стиле iOS */
+    background: #f5f5f7 !important; /* Светлый фон iOS */
+    color: #1d1d1f !important;
 }
 
 .container {
     display: flex;
     height: 100vh;
-    overflow: hidden;
+    width: 100vw;
+    margin: 0;
 }
 
 .youtube-section, .map-section {
-    width: 50%;
+    flex: 1; /* Равное распределение пространства */
     padding: 20px;
     box-sizing: border-box;
     overflow-y: auto;
+    background: #ffffff !important;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .youtube-section {
-    background: #ffffff;
     border-right: 1px solid #e0e0e0;
-    border-radius: 10px 0 0 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.map-section {
-    background: #ffffff;
-    border-radius: 0 10px 10px 0;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 h2 {
