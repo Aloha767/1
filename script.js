@@ -93,45 +93,22 @@ function initGoogleSignIn() {
     });
 }
 
-// Яндекс.Карты с поиском мест
-ymaps.ready(() => {
-    const map = new ymaps.Map('map', {
-        center: [55.7558, 37.6173], // Москва
-        zoom: 13,
-        controls: ['zoomControl', 'geolocationControl', 'searchControl']
-    }, {
-        suppressMapOpenBlock: true // Отключаем лишние элементы интерфейса
-    });
+// OpenStreetMap с помощью Leaflet
+document.addEventListener('DOMContentLoaded', () => {
+    const map = L.map('map').setView([55.7558, 37.6173], 13); // Москва
 
-    // Настройка поиска
-    const searchControl = map.controls.get('searchControl');
-    searchControl.options.set({
-        provider: 'yandex#search',
-        noPlacemark: false, // Показывать метку на найденном месте
-        placeholderContent: 'Введите адрес или место'
-    });
+    // Добавляем тайлы OpenStreetMap
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 19
+    }).addTo(map);
 
-    // Добавляем начальный маркер
-    const marker = new ymaps.Placemark([55.7558, 37.6173], {
-        hintContent: 'Москва',
-        balloonContent: 'Столица России'
-    });
-    map.geoObjects.add(marker);
-
-    // Обработка результатов поиска
-    searchControl.events.add('resultselect', function (e) {
-        const index = e.get('index');
-        searchControl.getResult(index).then(result => {
-            const coords = result.geometry.getCoordinates();
-            map.setCenter(coords, 15);
-        });
-    });
+    // Добавляем маркер
+    const marker = L.marker([55.7558, 37.6173]).addTo(map);
+    marker.bindPopup('Москва, Россия').openPopup();
 
     // Логирование для отладки
-    console.log('Яндекс.Карты инициализированы');
-}).catch(error => {
-    console.error('Ошибка инициализации Яндекс.Карт:', error);
-    alert('Ошибка загрузки Яндекс.Карт. Проверьте консоль.');
+    console.log('OpenStreetMap инициализирована');
 });
 
 // Инициализация
