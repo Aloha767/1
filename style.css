@@ -1,14 +1,20 @@
-html, body {
-    margin: 0;
-    padding: 0;
-    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-    background: #f5f5f7 !important; /* Светлый фон iOS */
-    color: #1d1d1f !important;
-    height: 100vh;
-    width: 100vw;
-    overflow: hidden; /* Убираем лишние полосы прокрутки */
+/* Отключаем тёмную тему и задаём светлый фон */
+:root {
+    color-scheme: light !important; /* Заставляем светлую тему */
 }
 
+html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif !important;
+    background: #f5f5f7 !important; /* Светлый фон iOS */
+    color: #1d1d1f !important;
+    height: 100vh !important;
+    width: 100vw !important;
+    overflow: hidden !important; /* Убираем лишние полосы прокрутки */
+}
+
+/* Контейнер для секций */
 .container {
     display: flex !important;
     flex-direction: row !important; /* Окна рядом */
@@ -22,6 +28,7 @@ html, body {
     background: #f5f5f7 !important; /* Светлый фон для контейнера */
 }
 
+/* Секции YouTube и Карты */
 .youtube-section, .map-section {
     flex: 1 1 50% !important; /* Каждое окно ровно 50% */
     max-width: 50% !important; /* Ограничиваем ширину */
@@ -63,6 +70,7 @@ input, button {
 
 #map {
     height: 80vh !important; /* Карта занимает доступное пространство */
+    min-height: 300px !important; /* Минимальная высота для карты */
 }
 
 button {
@@ -86,6 +94,7 @@ button:hover {
     background: #f5f5f7 !important;
 }
 
+/* Адаптивность для мобильных */
 @media (max-width: 768px) {
     .container {
         flex-direction: column !important; /* На мобильных окна друг под другом */
@@ -104,5 +113,6 @@ button:hover {
     }
     #map {
         height: 40vh !important; /* Уменьшаем высоту карты на мобильных */
+        min-height: 200px !important;
     }
 }
