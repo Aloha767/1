@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube & Maps</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <!-- Leaflet для карт -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Google Sign-In -->
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Левая половина: YouTube -->
+        <div class="youtube-section">
+            <h2>YouTube</h2>
+            <div class="auth-section">
+                <button id="signInButton">Войти в Google</button>
+                <p id="userInfo"></p>
+            </div>
+            <input type="text" id="searchInput" placeholder="Поиск видео">
+            <button onclick="searchVideos()">Поиск</button>
+            <div id="player"></div>
+            <ul id="videoList"></ul>
+        </div>
+        <!-- Правая половина: Карты -->
+        <div class="map-section">
+            <h2>Карты</h2>
+            <div id="map"></div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+    <!-- YouTube IFrame API -->
+    <script src="https://www.youtube.com/iframe_api"></script>
+</body>
+</html>
