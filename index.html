@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
   <title>YouTube & OSM App</title>
   <!-- Подключаем Leaflet для карты -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <style>
+    /* Стили без изменений (оставлены для краткости) */
     body {
       margin: 0;
       background: #000;
@@ -24,21 +25,14 @@
       display: flex;
       flex-direction: column;
     }
-    .youtube-section {
+    .youtube-section, .map-section {
       flex: 1;
       display: flex;
       flex-direction: column;
-      padding: 10px 10px 5px 10px;
+      padding: 10px;
       box-sizing: border-box;
     }
-    .map-section {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      padding: 5px 10px 10px 10px;
-      box-sizing: border-box;
-    }
-    .search-bar {
+    .search-bar, .map-search {
       width: 100%;
       padding: 10px;
       background: #333;
@@ -56,7 +50,7 @@
       margin-bottom: 10px;
       position: relative;
     }
-    .youtube-player video {
+    .youtube-player iframe {
       width: 100%;
       height: 100%;
       border-radius: 10px;
@@ -81,9 +75,6 @@
       height: 45px;
       border-radius: 5px;
     }
-    .search-result-item div {
-      flex: 1;
-    }
     .map-container {
       flex: 1;
       background: #222;
@@ -93,18 +84,6 @@
     .map-controls {
       display: flex;
       gap: 10px;
-    }
-    .map-search {
-      width: 50%;
-      padding: 10px;
-      background: #333;
-      border-radius: 10px;
-      border: none;
-      color: #fff;
-      font-size: 16px;
-      box-sizing: border-box;
-      height: 40px;
-      line-height: 1;
     }
     .map-button {
       flex: 1;
@@ -152,30 +131,74 @@
     </div>
   </div>
 
+  <!-- Подключаем YouTube IFrame Player API с defer -->
+  <script src="https://www.youtube.com/iframe_api" defer></script>
   <script>
     // --- YouTube функционал ---
-    const API_KEY = 'AIzaSyDZTr6Z8WTPti9BnNcTkmmasspiEFIpjeY';
+    const API_KEY = 'AIzaSyDZTr6Z8WTPti9BnNcTkmmasspiEFIpjeY'; // Ваш действующий ключ
     const searchInput = document.getElementById('youtube-search');
     const searchResults = document.getElementById('search-results');
-    const playerContainer = document.getElementById('youtube-player');
+    let player;
+    let isPlayerReady = false;
 
-    // Функция поиска видео
-    async function searchVideos(query) {
-      const response = await fetch(
-        `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&q=${encodeURIComponent(query)}&key=${API_KEY}`
-      );
-      const data = await response.json();
-      displaySearchResults(data.items);
+    function onYouTubeIframeAPIReady() {
+      try {
+        player = new YT.Player('youtube-player', {
+          height: '100%',
+          width: '100%',
+          playerVars: {
+            'autoplay': 1,
+            'controls': 1,
+          },
+          events: {
+            'onReady': onPlayerReady,
+            'onError': (error) => {
+              console.error('YouTube Player Error:', error);
+              alert('Ошибка инициализации YouTube плеера.');
+            }
+          }
+        });
+      } catch (err) {
+        console.error('Ошибка создания плеера:', err);
+      }
     }
 
-    // Отображение результатов поиска
+    function onPlayerReady(event) {
+      isPlayerReady = true;
+      console.log('Плеер готов к воспроизведению');
+    }
+
+    function debounce(func, delay) {
+      let timeout;
+      return (...args) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), delay);
+      };
+    }
+
+    async function searchVideos(query) {
+      try {
+        const response = await fetch(
+          `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&q=${encodeURIComponent(query)}&key=${API_KEY}`
+        );
+        if (!response.ok) {
+          throw new Error(`HTTP ошибка! Статус: ${response.status}`);
+        }
+        const data = await response.json();
+        displaySearchResults(data.items || []);
+      } catch (error) {
+        console.error('Ошибка поиска видео:', error);
+        alert('Не удалось выполнить поиск видео. Проверьте API-ключ [[9]].');
+      }
+    }
+
     function displaySearchResults(videos) {
       searchResults.innerHTML = '';
       videos.forEach(video => {
-        const videoId = video.id.videoId;
-        const title = video.snippet.title;
-        const thumbnail = video.snippet.thumbnails.default.url;
-        const duration = '3:45'; // Для упрощения, реальное значение можно получить через API
+        const videoId = video.id?.videoId;
+        const title = video.snippet?.title;
+        const thumbnail = video.snippet?.thumbnails?.default?.url;
+        const duration = '3:45';
 
         const resultItem = document.createElement('div');
         resultItem.className = 'search-result-item';
@@ -191,50 +214,61 @@
       });
     }
 
-    // Воспроизведение видео
     function playVideo(videoId) {
-      playerContainer.innerHTML = `
-        <video controls autoplay>
-          <source src="https://www.youtube.com/watch?v=${videoId}" type="video/mp4">
-          Your browser does not support the video tag.
-        </video>
-      `;
-      // Примечание: Прямое воспроизведение через <video> не работает из-за ограничений YouTube.
-      // Для реального воспроизведения нужно использовать IFrame Player API или извлечь прямую ссылку на видео (что требует дополнительных усилий).
+      if (isPlayerReady && player && player.loadVideoById) {
+        try {
+          player.loadVideoById(videoId);
+        } catch (err) {
+          console.error('Ошибка воспроизведения:', err);
+          alert('Не удалось воспроизвести видео.');
+        }
+      } else {
+        console.error('Плеер не готов или не инициализирован.');
+        alert('Плеер не готов. Подождите инициализации.');
+      }
     }
 
-    // Обработка ввода в строку поиска
-    searchInput.addEventListener('input', (e) => {
-      const query = e.target.value;
-      if (query.length > 2) {
-        searchVideos(query);
-      }
+    document.addEventListener("DOMContentLoaded", function () {
+      // Обработчик ввода с debounce
+      searchInput.addEventListener('input', debounce(async (e) => {
+        const query = e.target.value.trim();
+        if (query.length > 2) {
+          try {
+            await searchVideos(query);
+          } catch (error) {
+            console.error('Ошибка поиска:', error);
+          }
+        }
+      }, 300));
     });
 
     // --- OpenStreetMap функционал ---
-    const map = L.map('map').setView([51.505, -0.09], 13); // Начальная позиция (Лондон)
+    const map = L.map('map').setView([51.505, -0.09], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
-    // Поиск мест
     const mapSearchInput = document.getElementById('map-search');
     mapSearchInput.addEventListener('input', async (e) => {
       const query = e.target.value;
       if (query.length > 2) {
-        const response = await fetch(
-          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`
-        );
-        const data = await response.json();
-        if (data.length > 0) {
-          const { lat, lon } = data[0];
-          map.setView([lat, lon], 13);
-          L.marker([lat, lon]).addTo(map);
+        try {
+          const response = await fetch(
+            `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`
+          );
+          if (!response.ok) throw new Error('Ошибка поиска местоположения');
+          const data = await response.json();
+          if (data.length > 0) {
+            const { lat, lon } = data[0];
+            map.setView([lat, lon], 13);
+            L.marker([lat, lon]).addTo(map).bindPopup('Местоположение найдено').openPopup();
+          }
+        } catch (error) {
+          console.error('Ошибка поиска по карте:', error);
         }
       }
     });
 
-    // Геолокация
     const geoButton = document.getElementById('geo-button');
     geoButton.addEventListener('click', () => {
       if (navigator.geolocation) {
@@ -242,14 +276,14 @@
           (position) => {
             const { latitude, longitude } = position.coords;
             map.setView([latitude, longitude], 13);
-            L.marker([latitude, longitude]).addTo(map).bindPopup('You are here!').openPopup();
+            L.marker([latitude, longitude]).addTo(map).bindPopup('Вы здесь').openPopup();
           },
           (error) => {
-            alert('Geolocation error: ' + error.message);
+            alert('Геолокация недоступна: ' + error.message);
           }
         );
       } else {
-        alert('Geolocation is not supported by your browser.');
+        alert('Геолокация не поддерживается вашим браузером.');
       }
     });
   </script>
