@@ -5,26 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#1d1d1f">
     <title>YouTube & Maps</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
     <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="/manifest.json">
     <script src="https://apis.google.com/js/platform.js" async defer></script>
     <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&apikey=54801f27-f804-40f5-86eb-6bd2cde838b6"></script>
 </head>
 <body>
     <div class="container">
+        <!-- Секция YouTube -->
         <div class="youtube-section">
             <h2>YouTube</h2>
             <div class="auth-section">
                 <button id="signInButton">Войти в Google</button>
                 <p id="userInfo"></p>
             </div>
-            <input type="text" id="searchInput" placeholder="Поиск видео">
-            <button onclick="searchVideos()">Поиск</button>
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="Поиск видео">
+                <button onclick="searchVideos()">Поиск</button>
+            </div>
             <div id="player"></div>
             <ul id="videoList"></ul>
         </div>
+        <!-- Секция Карты -->
         <div class="map-section">
             <h2>Карты</h2>
+            <input type="text" id="mapSearchInput" placeholder="Поиск места">
             <div id="map"></div>
         </div>
     </div>
