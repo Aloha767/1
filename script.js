@@ -1,11 +1,5 @@
-const YOUTUBE_API_KEY = 'AlzaSyDZTr6Z8WTPti9BnNcTkmmasspiEFIpjeY';
-const CLIENT_ID = '1032352910036-ovsosc6r3ot2ipuvpginuumit05988qf.apps.googleusercontent.com';
+const YOUTUBE_API_KEY = 'AlzaSyDZTr6Z8WTPti9BnNcTkmmasspiEFIpjeY'; // Замените, если ключ недействителен
 let player;
-
-// Проверка загрузки Google API
-if (typeof gapi === 'undefined') {
-    console.error('Google API (gapi) не загружен! Проверьте скрипт https://apis.google.com/js/platform.js');
-}
 
 function onYouTubeIframeAPIReady() {
     console.log('Инициализация YouTube плеера...');
@@ -75,50 +69,6 @@ function searchVideos() {
         });
 }
 
-function initGoogleSignIn() {
-    console.log('Инициализация Google Sign-In...');
-    if (!window.gapi) {
-        console.error('gapi не определён! Проверьте загрузку Google API.');
-        return;
-    }
-    gapi.load('auth2', () => {
-        console.log('Библиотека auth2 загружена');
-        gapi.auth2.init({
-            client_id: CLIENT_ID,
-            scope: 'https://www.googleapis.com/auth/youtube.readonly'
-        }).then(() => {
-            console.log('Google Sign-In инициализирован');
-            const signInButton = document.getElementById('signInButton');
-            if (!signInButton) {
-                console.error('Кнопка #signInButton не найдена!');
-                return;
-            }
-            const authInstance = gapi.auth2.getAuthInstance();
-            if (authInstance.isSignedIn.get()) {
-                const profile = authInstance.currentUser.get().getBasicProfile();
-                document.getElementById('userInfo').textContent = `Привет, ${profile.getName()}!`;
-                signInButton.style.display = 'none';
-                console.log('Пользователь уже авторизован:', profile.getName());
-            }
-            signInButton.onclick = () => {
-                console.log('Нажата кнопка "Войти в Google"');
-                authInstance.signIn().then(googleUser => {
-                    const profile = googleUser.getBasicProfile();
-                    document.getElementById('userInfo').textContent = `Привет, ${profile.getName()}!`;
-                    signInButton.style.display = 'none';
-                    console.log('Авторизация успешна:', profile.getName());
-                }).catch(error => {
-                    console.error('Ошибка входа:', error);
-                    alert('Ошибка авторизации. Проверьте консоль.');
-                });
-            };
-        }).catch(error => {
-            console.error('Ошибка инициализации Google Sign-In:', error);
-            alert('Ошибка инициализации авторизации. Проверьте консоль.');
-        });
-    });
-}
-
 ymaps.ready(() => {
     const mapElement = document.getElementById('map');
     if (!mapElement) {
@@ -180,10 +130,4 @@ ymaps.ready(() => {
 }).catch(error => {
     console.error('Ошибка инициализации Яндекс.Карт:', error);
     alert('Ошибка загрузки Яндекс.Карт. Проверьте консоль для деталей.');
-});
-
-// Инициализация
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('Документ загружен, запускаем initGoogleSignIn...');
-    initGoogleSignIn();
 });

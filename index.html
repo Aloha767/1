@@ -7,16 +7,19 @@
     <title>YouTube & Maps</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="manifest" href="/manifest.json">
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script src="https://apis.google.com/js/platform.js" async defer onerror="console.error('Не удалось загрузить Google API!')"></script>
     <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&apikey=54801f27-f804-40f5-86eb-6bd2cde838b6"></script>
 </head>
 <body>
     <div class="container">
         <!-- Секция YouTube -->
         <div class="youtube-section">
-            <h2>YouTube</h2>
             <div class="auth-section">
-                <button id="signInButton">Войти в Google</button>
+                <button id="signInButton">
+                    <svg class="door-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h4M9 3v18M15 12h6M15 12l-3-3M15 12l-3 3"/>
+                    </svg>
+                </button>
                 <p id="userInfo"></p>
             </div>
             <div class="search-container">
@@ -28,7 +31,6 @@
         </div>
         <!-- Секция Карты -->
         <div class="map-section">
-            <h2>Карты</h2>
             <input type="text" id="mapSearchInput" placeholder="Поиск места">
             <div id="map"></div>
         </div>

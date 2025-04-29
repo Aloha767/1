@@ -39,13 +39,6 @@ html, body {
     border-right: 1px solid #3a3a3c !important;
 }
 
-h2 {
-    font-size: 1.5rem !important;
-    color: #ffffff !important;
-    margin-bottom: 10px !important;
-    text-align: center !important;
-}
-
 input, button {
     border-radius: 8px !important;
     padding: 5px !important;
@@ -71,7 +64,7 @@ input, button {
     width: auto !important;
 }
 
-.search-container button, #signInButton {
+.search-container button {
     width: auto !important;
     padding: 5px 10px !important;
 }
@@ -82,6 +75,28 @@ input, button {
     align-items: center !important;
     gap: 5px !important;
     margin-bottom: 10px !important;
+}
+
+#signInButton {
+    width: 40px !important;
+    height: 40px !important;
+    background: #28a745 !important; /* Зелёный цвет */
+    border-radius: 50% !important; /* Круглая форма */
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    border: none !important;
+    cursor: pointer !important;
+}
+
+#signInButton:hover {
+    background: #218838 !important; /* Более тёмный зелёный при наведении */
+}
+
+.door-icon {
+    width: 20px !important;
+    height: 20px !important;
 }
 
 #userInfo {
