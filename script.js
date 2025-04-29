@@ -2,7 +2,13 @@ const YOUTUBE_API_KEY = 'AlzaSyDZTr6Z8WTPti9BnNcTkmmasspiEFIpjeY';
 const CLIENT_ID = '1032352910036-ovsosc6r3ot2ipuvpginuumit05988qf.apps.googleusercontent.com';
 let player;
 
+// Проверка загрузки Google API
+if (typeof gapi === 'undefined') {
+    console.error('Google API (gapi) не загружен! Проверьте скрипт https://apis.google.com/js/platform.js');
+}
+
 function onYouTubeIframeAPIReady() {
+    console.log('Инициализация YouTube плеера...');
     player = new YT.Player('player', {
         height: '100%',
         width: '100%',
@@ -33,11 +39,15 @@ function searchVideos() {
         return;
     }
     console.log('Начинаем поиск видео:', query);
-    fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&key=${YOUTUBE_API_KEY}&maxResults=10&type=video`)
+    const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&key=${YOUTUBE_API_KEY}&maxResults=10&type=video`;
+    console.log('URL запроса:', url);
+    fetch(url)
         .then(response => {
             console.log('Ответ от YouTube API:', response);
             if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
+                return response.text().then(text => {
+                    throw new Error(`HTTP error! Status: ${response.status}, Response: ${text}`);
+                });
             }
             return response.json();
         })
@@ -49,7 +59,10 @@ function searchVideos() {
                 data.items.forEach(item => {
                     const li = document.createElement('li');
                     li.textContent = item.snippet.title;
-                    li.onclick = () => player.loadVideoById(item.id.videoId);
+                    li.onclick = () => {
+                        console.log('Загрузка видео:', item.id.videoId);
+                        player.loadVideoById(item.id.videoId);
+                    };
                     videoList.appendChild(li);
                 });
             } else {
@@ -63,23 +76,37 @@ function searchVideos() {
 }
 
 function initGoogleSignIn() {
+    console.log('Инициализация Google Sign-In...');
+    if (!window.gapi) {
+        console.error('gapi не определён! Проверьте загрузку Google API.');
+        return;
+    }
     gapi.load('auth2', () => {
+        console.log('Библиотека auth2 загружена');
         gapi.auth2.init({
             client_id: CLIENT_ID,
             scope: 'https://www.googleapis.com/auth/youtube.readonly'
         }).then(() => {
+            console.log('Google Sign-In инициализирован');
             const signInButton = document.getElementById('signInButton');
+            if (!signInButton) {
+                console.error('Кнопка #signInButton не найдена!');
+                return;
+            }
             const authInstance = gapi.auth2.getAuthInstance();
             if (authInstance.isSignedIn.get()) {
                 const profile = authInstance.currentUser.get().getBasicProfile();
                 document.getElementById('userInfo').textContent = `Привет, ${profile.getName()}!`;
                 signInButton.style.display = 'none';
+                console.log('Пользователь уже авторизован:', profile.getName());
             }
             signInButton.onclick = () => {
+                console.log('Нажата кнопка "Войти в Google"');
                 authInstance.signIn().then(googleUser => {
                     const profile = googleUser.getBasicProfile();
                     document.getElementById('userInfo').textContent = `Привет, ${profile.getName()}!`;
                     signInButton.style.display = 'none';
+                    console.log('Авторизация успешна:', profile.getName());
                 }).catch(error => {
                     console.error('Ошибка входа:', error);
                     alert('Ошибка авторизации. Проверьте консоль.');
@@ -155,4 +182,8 @@ ymaps.ready(() => {
     alert('Ошибка загрузки Яндекс.Карт. Проверьте консоль для деталей.');
 });
 
-initGoogleSignIn();
+// Инициализация
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('Документ загружен, запускаем initGoogleSignIn...');
+    initGoogleSignIn();
+});

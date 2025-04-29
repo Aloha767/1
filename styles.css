@@ -48,7 +48,7 @@ h2 {
 
 input, button {
     border-radius: 8px !important;
-    padding: 5px !important; /* Уменьшаем padding вдвое */
+    padding: 5px !important;
     margin: 5px 0 !important;
     background: #3a3a3c !important;
     color: #ffffff !important;
@@ -56,24 +56,24 @@ input, button {
 }
 
 .youtube-section input, .youtube-section button {
-    font-size: 0.8rem !important; /* Уменьшаем размер шрифта */
+    font-size: 0.8rem !important;
 }
 
 .search-container {
     display: flex !important;
     flex-direction: row !important;
     align-items: center !important;
-    gap: 5px !important; /* Пространство между полем ввода и кнопкой */
+    gap: 5px !important;
 }
 
 .search-container input {
-    flex: 1 !important; /* Поле ввода занимает оставшееся место */
-    width: auto !important; /* Убираем width: 100% */
+    flex: 1 !important;
+    width: auto !important;
 }
 
 .search-container button, #signInButton {
-    width: auto !important; /* Убираем width: 100% */
-    padding: 5px 10px !important; /* Уменьшенный padding */
+    width: auto !important;
+    padding: 5px 10px !important;
 }
 
 .auth-section {
