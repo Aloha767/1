@@ -3,32 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Мой сайт с YouTube и Яндекс.Картами</title>
-
-    <!-- Подключение YouTube IFrame API -->
-    <script src="https://www.youtube.com/iframe_api"></script>
-
-    <!-- Подключение Яндекс.Карт API -->
+    <meta name="theme-color" content="#1d1d1f"> <!-- Тёмный фон для iOS -->
+    <title>YouTube & Maps</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <!-- Google Sign-In -->
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <!-- Яндекс.Карты API -->
     <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&apikey=54801f27-f804-40f5-86eb-6bd2cde838b6"></script>
-
-    <!-- Подключение CSS стилей -->
-    <link rel="stylesheet" href="css/styles.css">
-
 </head>
 <body>
-
-    <!-- Панель поиска YouTube -->
-    <input id="search" type="text" placeholder="Поиск на YouTube..." />
-
-    <!-- Плеер YouTube -->
-    <div id="youtube-player"></div>
-
-    <!-- Панель карт Яндекс -->
-    <div id="map"></div>
-
-    <div id="youtube-search-results"></div>
-
-    <script src="js/script.js"></script>
-
+    <div class="container">
+        <!-- Левая половина: YouTube -->
+        <div class="youtube-section">
+            <h2>YouTube</h2>
+            <div class="auth-section">
+                <button id="signInButton">Войти в Google</button>
+                <p id="userInfo"></p>
+            </div>
+            <input type="text" id="searchInput" placeholder="Поиск видео">
+            <button onclick="searchVideos()">Поиск</button>
+            <div id="player"></div>
+            <ul id="videoList"></ul>
+        </div>
+        <!-- Правая половина: Карты -->
+        <div class="map-section">
+            <h2>Карты</h2>
+            <div id="map"></div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+    <!-- YouTube IFrame API -->
+    <script src="https://www.youtube.com/iframe_api"></script>
 </body>
 </html>
