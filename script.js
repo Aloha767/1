@@ -1,4 +1,5 @@
-const YOUTUBE_API_KEY = 'AlzaSyDZTr6Z8WTPti9BnNcTkmmasspiEFIpjeY'; // Замените, если ключ недействителен
+// Замените YOUR_NEW_API_KEY на ваш новый ключ
+const YOUTUBE_API_KEY = 'YOUR_NEW_API_KEY'; // Например, AIzaSyDNewKeyExample1234567890
 let player;
 
 function onYouTubeIframeAPIReady() {
@@ -35,12 +36,17 @@ function searchVideos() {
     console.log('Начинаем поиск видео:', query);
     const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&key=${YOUTUBE_API_KEY}&maxResults=10&type=video`;
     console.log('URL запроса:', url);
-    fetch(url)
+    fetch(url, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json'
+        }
+    })
         .then(response => {
             console.log('Ответ от YouTube API:', response);
             if (!response.ok) {
-                return response.text().then(text => {
-                    throw new Error(`HTTP error! Status: ${response.status}, Response: ${text}`);
+                return response.json().then(err => {
+                    throw new Error(`HTTP error! Status: ${response.status}, Message: ${JSON.stringify(err)}`);
                 });
             }
             return response.json();

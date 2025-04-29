@@ -1,20 +1,12 @@
 {
-  "name": "YouTube и Карты",
-  "short_name": "YT+Карты",
-  "start_url": ".",
-  "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#007aff",
-  "icons": [
-    {
-      "src": "icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
-  ]
+    "name": "YouTube & Maps",
+    "short_name": "YT & Maps",
+    "description": "Приложение для просмотра YouTube видео и карт",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#1d1d1f",
+    "theme_color": "#1d1d1f",
+    "lang": "ru",
+    "dir": "ltr",
+    "orientation": "portrait"
 }
