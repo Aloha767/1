@@ -1,16 +1,14 @@
-// YouTube API
 const YOUTUBE_API_KEY = 'AlzaSyDZTr6Z8WTPti9BnNcTkmmasspiEFIpjeY';
 const CLIENT_ID = '1032352910036-ovsosc6r3ot2ipuvpginuumit05988qf.apps.googleusercontent.com';
 let player;
 
-// Инициализация YouTube плеера
 function onYouTubeIframeAPIReady() {
     player = new YT.Player('player', {
         height: '100%',
         width: '100%',
-        videoId: 'M7lc1UVf-VE', // Тестовое видео
+        videoId: 'M7lc1UVf-VE',
         playerVars: {
-            'playsinline': 1 // Для корректной работы на iOS
+            'playsinline': 1
         },
         events: {
             'onReady': onPlayerReady,
@@ -28,7 +26,6 @@ function onPlayerError(error) {
     alert('Ошибка загрузки YouTube плеера. Проверьте консоль.');
 }
 
-// Поиск видео
 function searchVideos() {
     const query = document.getElementById('searchInput').value;
     if (!query) {
@@ -62,7 +59,6 @@ function searchVideos() {
         });
 }
 
-// Google Sign-In
 function initGoogleSignIn() {
     gapi.load('auth2', () => {
         gapi.auth2.init({
@@ -93,7 +89,6 @@ function initGoogleSignIn() {
     });
 }
 
-// Яндекс.Карты с поиском мест
 ymaps.ready(() => {
     const mapElement = document.getElementById('map');
     if (!mapElement) {
@@ -102,29 +97,26 @@ ymaps.ready(() => {
     }
 
     const map = new ymaps.Map('map', {
-        center: [55.7558, 37.6173], // Москва
+        center: [55.7558, 37.6173],
         zoom: 13,
         controls: ['zoomControl', 'geolocationControl', 'searchControl']
     }, {
-        suppressMapOpenBlock: true // Отключаем лишние элементы интерфейса
+        suppressMapOpenBlock: true
     });
 
-    // Настройка поиска
     const searchControl = map.controls.get('searchControl');
     searchControl.options.set({
         provider: 'yandex#search',
-        noPlacemark: false, // Показывать метку на найденном месте
+        noPlacemark: false,
         placeholderContent: 'Введите адрес или место'
     });
 
-    // Добавляем начальный маркер
     const marker = new ymaps.Placemark([55.7558, 37.6173], {
         hintContent: 'Москва',
         balloonContent: 'Столица России'
     });
     map.geoObjects.add(marker);
 
-    // Обработка результатов поиска
     searchControl.events.add('resultselect', function (e) {
         const index = e.get('index');
         searchControl.getResult(index).then(result => {
@@ -133,12 +125,10 @@ ymaps.ready(() => {
         });
     });
 
-    // Логирование для отладки
     console.log('Яндекс.Карты инициализированы успешно');
 }).catch(error => {
     console.error('Ошибка инициализации Яндекс.Карт:', error);
     alert('Ошибка загрузки Яндекс.Карт. Проверьте консоль для деталей.');
 });
 
-// Инициализация
 initGoogleSignIn();

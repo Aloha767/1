@@ -3,18 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#1d1d1f"> <!-- Тёмный фон для iOS -->
+    <meta name="theme-color" content="#1d1d1f">
     <title>YouTube & Maps</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
     <link rel="stylesheet" href="styles.css">
-    <!-- Google Sign-In -->
     <script src="https://apis.google.com/js/platform.js" async defer></script>
-    <!-- Яндекс.Карты API -->
     <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&apikey=54801f27-f804-40f5-86eb-6bd2cde838b6"></script>
 </head>
 <body>
     <div class="container">
-        <!-- Левая половина: YouTube -->
         <div class="youtube-section">
             <h2>YouTube</h2>
             <div class="auth-section">
@@ -26,14 +23,12 @@
             <div id="player"></div>
             <ul id="videoList"></ul>
         </div>
-        <!-- Правая половина: Карты -->
         <div class="map-section">
             <h2>Карты</h2>
             <div id="map"></div>
         </div>
     </div>
     <script src="script.js"></script>
-    <!-- YouTube IFrame API -->
     <script src="https://www.youtube.com/iframe_api"></script>
 </body>
 </html>

@@ -1,0 +1,113 @@
+* {
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+html, body {
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif !important;
+    background: #1d1d1f !important;
+    color: #ffffff !important;
+    height: 100vh !important;
+    width: 100vw !important;
+    overflow: hidden !important;
+}
+
+.container {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: center !important;
+    align-items: stretch !important;
+    height: 100vh !important;
+    width: 100vw !important;
+    background: #1d1d1f !important;
+}
+
+.youtube-section, .map-section {
+    flex: 1 1 50% !important;
+    max-width: 50% !important;
+    min-width: 0 !important;
+    padding: 20px !important;
+    overflow-y: auto !important;
+    background: #2c2c2e !important;
+    border-radius: 10px !important;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3) !important;
+    margin: 10px !important;
+}
+
+.youtube-section {
+    border-right: 1px solid #3a3a3c !important;
+}
+
+h2 {
+    font-size: 1.5rem !important;
+    color: #ffffff !important;
+    margin-bottom: 10px !important;
+    text-align: center !important;
+}
+
+input, button {
+    border-radius: 8px !important;
+    padding: 10px !important;
+    margin: 5px 0 !important;
+    width: 100% !important;
+    background: #3a3a3c !important;
+    color: #ffffff !important;
+    border: 1px solid #555 !important;
+}
+
+#player, #map {
+    height: 300px !important;
+    border-radius: 8px !important;
+    margin-top: 10px !important;
+    width: 100% !important;
+}
+
+#map {
+    height: 80vh !important;
+    min-height: 300px !important;
+}
+
+button {
+    background: #007aff !important;
+    color: white !important;
+    border: none !important;
+    cursor: pointer !important;
+}
+
+button:hover {
+    background: #005bb5 !important;
+}
+
+#videoList li {
+    cursor: pointer !important;
+    padding: 10px !important;
+    border-bottom: 1px solid #3a3a3c !important;
+    color: #ffffff !important;
+}
+
+#videoList li:hover {
+    background: #3a3a3c !important;
+}
+
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column !important;
+        align-items: center !important;
+    }
+    .youtube-section, .map-section {
+        flex: none !important;
+        max-width: 100% !important;
+        width: 100% !important;
+        height: 50vh !important;
+        margin: 5px 0 !important;
+    }
+    .youtube-section {
+        border-right: none !important;
+        border-bottom: 1px solid #3a3a3c !important;
+    }
+    #map {
+        height: 40vh !important;
+        min-height: 200px !important;
+    }
+}
