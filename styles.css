@@ -16,20 +16,20 @@ body {
 }
 
 .youtube-section {
-  flex: 1;
+  height: 50vh; /* Явная высота для 50/50 */
   display: flex;
   flex-direction: column;
-  padding: 10px 10px 5px 10px;
+  padding: 10px;
   box-sizing: border-box;
 }
 
 .map-section {
-  flex: 1;
+  height: 50vh; /* Явная высота для 50/50 */
   display: flex;
   flex-direction: column;
-  padding: 5px 10px 10px 10px;
+  padding: 10px;
   box-sizing: border-box;
-  position: relative; /* Для позиционирования route-menu */
+  position: relative; /* Для позиционирования route-menu и notification */
 }
 
 .search-container {
@@ -190,6 +190,26 @@ body {
   background: #44ff44; /* Подсветка активных кнопок */
 }
 
+/* Кастомное уведомление */
+.notification {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(255, 0, 0, 0.8);
+  color: #fff;
+  padding: 10px;
+  border-radius: 5px;
+  z-index: 1000;
+  max-width: 200px;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.notification.show {
+  opacity: 1;
+}
+
 /* Стили для модального окна */
 .modal {
   position: fixed;
@@ -258,13 +278,13 @@ body {
   border-radius: 10px;
   z-index: 1000;
   padding: 10px;
-  max-height: 40vh; /* Уменьшили высоту */
-  overflow-y: auto; /* Прокрутка */
-  transition: transform 0.3s ease-in-out; /* Анимация открытия/закрытия */
+  max-height: 40vh;
+  overflow-y: auto;
+  transition: transform 0.3s ease-in-out;
 }
 
 .route-menu.hidden {
-  transform: translateY(100%); /* Скрываем окно за пределами экрана */
+  transform: translateY(100%);
 }
 
 .route-menu-header {
