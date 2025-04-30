@@ -200,6 +200,10 @@ let routeMarkers = [];
 let routeLayer = null;
 let settingPoint = null;
 let waypoints = [];
+let locationMarker = null;
+let locationWatchId = null;
+let infraLayer = null;
+let gpxLayer = null;
 
 // Модальное окно для добавления мест
 const markerModal = document.getElementById('marker-modal');
@@ -255,9 +259,9 @@ map.on('click', (e) => {
     });
     routeMarkers.push(marker);
     if (point === 'A') {
-      document.getElementById('point-a').value = '';
+      document.getElementById('point-a-input').value = '';
     } else if (point === 'B') {
-      document.getElementById('point-b').value = '';
+      document.getElementById('point-b-input').value = '';
     } else {
       const index = parseInt(point) - 1;
       waypoints[index].latlng = e.latlng;
@@ -291,8 +295,13 @@ cancelMarkerButton.addEventListener('click', () => {
 // --- Построение маршрутов ---
 const routeMenu = document.getElementById('route-menu');
 const routeButton = document.getElementById('route-button');
+const closeRouteMenuButton = document.getElementById('close-route-menu');
 const routeModeSelect = document.getElementById('route-mode');
 const avoidHighwaysCheckbox = document.getElementById('avoid-highways');
+const pointAInput = document.getElementById('point-a-input');
+const pointBInput = document.getElementById('point-b-input');
+const pointASuggestions = document.getElementById('point-a-suggestions');
+const pointBSuggestions = document.getElementById('point-b-suggestions');
 const pointASelect = document.getElementById('point-a');
 const pointBSelect = document.getElementById('point-b');
 const waypointsContainer = document.getElementById('waypoints');
@@ -305,7 +314,88 @@ const routeElevation = document.getElementById('route-elevation');
 
 // Показать/скрыть меню маршрутов
 routeButton.addEventListener('click', () => {
-  routeMenu.style.display = routeMenu.style.display === 'none' ? 'block' : 'none';
+  const isHidden = routeMenu.classList.contains('hidden');
+  routeMenu.classList.toggle('hidden', !isHidden);
+  routeButton.classList.toggle('active', isHidden);
+});
+
+closeRouteMenuButton.addEventListener('click', () => {
+  routeMenu.classList.add('hidden');
+  routeButton.classList.remove('active');
+});
+
+// Поиск адреса для точек А и Б
+async function searchLocation(query, suggestionsContainer, point) {
+  try {
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`
+    );
+    if (!response.ok) throw new Error('Ошибка поиска местоположения');
+    const data = await response.json();
+    suggestionsContainer.innerHTML = '';
+    if (data.length === 0) {
+      suggestionsContainer.style.display = 'none';
+      return;
+    }
+    data.forEach(item => {
+      const suggestionItem = document.createElement('div');
+      suggestionItem.className = 'point-suggestion-item';
+      suggestionItem.textContent = item.display_name;
+      suggestionItem.addEventListener('click', () => {
+        const { lat, lon } = item;
+        const marker = L.marker([lat, lon], { draggable: true }).addTo(map)
+          .bindPopup(point);
+        marker.on('dragend', () => {
+          buildRoute();
+        });
+        marker.on('contextmenu', () => {
+          map.removeLayer(marker);
+          routeMarkers = routeMarkers.filter(m => m !== marker);
+          buildRoute();
+        });
+        routeMarkers = routeMarkers.filter(m => !m.getPopup().getContent().includes(point));
+        routeMarkers.push(marker);
+        if (point === 'A') {
+          pointAInput.value = item.display_name;
+        } else {
+          pointBInput.value = item.display_name;
+        }
+        suggestionsContainer.style.display = 'none';
+        buildRoute();
+      });
+      suggestionsContainer.appendChild(suggestionItem);
+    });
+    suggestionsContainer.style.display = 'block';
+  } catch (error) {
+    console.error('Ошибка поиска адреса:', error);
+  }
+}
+
+pointAInput.addEventListener('input', debounce((e) => {
+  const query = e.target.value.trim();
+  if (query.length > 2) {
+    searchLocation(query, pointASuggestions, 'A');
+  } else {
+    pointASuggestions.style.display = 'none';
+  }
+}, 300));
+
+pointBInput.addEventListener('input', debounce((e) => {
+  const query = e.target.value.trim();
+  if (query.length > 2) {
+    searchLocation(query, pointBSuggestions, 'B');
+  } else {
+    pointBSuggestions.style.display = 'none';
+  }
+}, 300));
+
+document.addEventListener('click', (e) => {
+  if (!pointAInput.contains(e.target) && !pointASuggestions.contains(e.target)) {
+    pointASuggestions.style.display = 'none';
+  }
+  if (!pointBInput.contains(e.target) && !pointBSuggestions.contains(e.target)) {
+    pointBSuggestions.style.display = 'none';
+  }
 });
 
 // Обновление списка сохранённых мест
@@ -340,6 +430,7 @@ pointASelect.addEventListener('change', () => {
     });
     routeMarkers = routeMarkers.filter(m => !m.getPopup().getContent().includes('A'));
     routeMarkers.push(marker);
+    pointAInput.value = pointASelect.options[pointASelect.selectedIndex].text;
     buildRoute();
   }
 });
@@ -359,6 +450,7 @@ pointBSelect.addEventListener('change', () => {
     });
     routeMarkers = routeMarkers.filter(m => !m.getPopup().getContent().includes('B'));
     routeMarkers.push(marker);
+    pointBInput.value = pointBSelect.options[pointBSelect.selectedIndex].text;
     buildRoute();
   }
 });
@@ -492,13 +584,13 @@ async function buildRoute() {
   let exclude = avoidHighways ? 'motorway' : '';
 
   if (mode === 'road') {
-    profile = 'car'; // Используем профиль car для дорожного режима
+    profile = 'car';
   } else if (mode === 'touring') {
     profile = 'bicycle';
   } else if (mode === 'gravel') {
     profile = 'bicycle';
     exclude += exclude ? ',' : '';
-    exclude += 'paved'; // Исключаем асфальтированные дороги для гравийного режима
+    exclude += 'paved';
   }
 
   try {
@@ -523,13 +615,12 @@ async function buildRoute() {
       }).addTo(map);
 
       // Рассчитываем статистику
-      const distance = (route.distance / 1000).toFixed(1); // в километрах
-      const averageSpeed = 15; // км/ч (можно сделать настраиваемым)
-      const time = Math.round((route.distance / 1000) / averageSpeed * 60); // в минутах
+      const distance = (route.distance / 1000).toFixed(1);
+      const averageSpeed = 15;
+      const time = Math.round((route.distance / 1000) / averageSpeed * 60);
 
-      // Для перепада высот используем Open-Elevation API
-      const coordsForElevation = geometry.coordinates.map(coord => ({ latitude: coord[1], longitude: coord[0] }));
       let elevationGain = 0;
+      const coordsForElevation = geometry.coordinates.map(coord => ({ latitude: coord[1], longitude: coord[0] }));
       if (coordsForElevation.length > 1) {
         const elevationResponse = await fetch('https://api.open-elevation.com/api/v1/lookup', {
           method: 'POST',
@@ -555,7 +646,7 @@ async function buildRoute() {
   }
 }
 
-// Очистка маршрута
+// Очистка маршрута (без закрытия меню)
 clearRouteButton.addEventListener('click', () => {
   routeMarkers.forEach(marker => map.removeLayer(marker));
   routeMarkers = [];
@@ -568,6 +659,8 @@ clearRouteButton.addEventListener('click', () => {
   addWaypointButton.textContent = `Добавить промежуточную точку (0/10)`;
   addWaypointButton.disabled = true;
   routeStats.style.display = 'none';
+  pointAInput.value = '';
+  pointBInput.value = '';
   pointASelect.value = '';
   pointBSelect.value = '';
 });
@@ -598,23 +691,161 @@ mapSearchInput.addEventListener('input', debounce(async (e) => {
   }
 }, 300));
 
-// Геолокация
+// Геолокация в реальном времени
 const geoButton = document.getElementById('geo-button');
 geoButton.addEventListener('click', () => {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        map.setView([latitude, longitude], 13);
-        L.marker([latitude, longitude]).addTo(map).bindPopup('Вы здесь').openPopup();
-      },
-      (error) => {
-        alert('Геолокация недоступна: ' + error.message);
-      }
-    );
+  if (!locationWatchId) {
+    // Включить отслеживание
+    if (navigator.geolocation) {
+      locationWatchId = navigator.geolocation.watchPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          if (!locationMarker) {
+            locationMarker = L.circleMarker([latitude, longitude], {
+              radius: 8,
+              color: '#3388ff',
+              fillColor: '#3388ff',
+              fillOpacity: 0.5
+            }).addTo(map).bindPopup('Вы здесь');
+          } else {
+            locationMarker.setLatLng([latitude, longitude]);
+          }
+          map.setView([latitude, longitude], 13);
+          geoButton.classList.add('active');
+        },
+        (error) => {
+          alert('Геолокация недоступна: ' + error.message);
+        },
+        {
+          enableHighAccuracy: true,
+          maximumAge: 0,
+          timeout: 5000
+        }
+      );
+    } else {
+      alert('Геолокация не поддерживается вашим браузером.');
+    }
   } else {
-    alert('Геолокация не поддерживается вашим браузером.');
+    // Выключить отслеживание
+    navigator.geolocation.clearWatch(locationWatchId);
+    locationWatchId = null;
+    if (locationMarker) {
+      map.removeLayer(locationMarker);
+      locationMarker = null;
+    }
+    geoButton.classList.remove('active');
   }
+});
+
+// Отображение велоинфраструктуры
+const infraButton = document.getElementById('infra-button');
+infraButton.addEventListener('click', async () => {
+  if (infraLayer) {
+    map.removeLayer(infraLayer);
+    infraLayer = null;
+    infraButton.classList.remove('active');
+    return;
+  }
+
+  try {
+    const bounds = map.getBounds();
+    const bbox = `${bounds.getSouth()},${bounds.getWest()},${bounds.getNorth()},${bounds.getEast()}`;
+    const query = `
+      [out:json];
+      (
+        way["highway"="cycleway"](${bbox});
+        node["amenity"="bicycle_parking"](${bbox});
+        node["shop"="bicycle"](${bbox});
+        node["amenity"="bicycle_rental"](${bbox});
+      );
+      out body;
+      >;
+      out skel qt;
+    `;
+    const response = await fetch('https://overpass-api.de/api/interpreter', {
+      method: 'POST',
+      body: query
+    });
+    if (!response.ok) throw new Error('Ошибка загрузки инфраструктуры');
+    const data = await response.json();
+
+    infraLayer = L.layerGroup();
+    data.elements.forEach(element => {
+      if (element.type === 'way' && element.tags.highway === 'cycleway') {
+        const coords = element.nodes.map(nodeId => {
+          const node = data.elements.find(el => el.id === nodeId && el.type === 'node');
+          return [node.lat, node.lon];
+        });
+        L.polyline(coords, { color: '#00ff00', weight: 3 }).addTo(infraLayer).bindPopup('Велодорожка');
+      } else if (element.type === 'node') {
+        const { lat, lon } = element;
+        let popupText = '';
+        if (element.tags.amenity === 'bicycle_parking') popupText = 'Велопарковка';
+        else if (element.tags.shop === 'bicycle') popupText = 'Веломагазин';
+        else if (element.tags.amenity === 'bicycle_rental') popupText = 'Прокат велосипедов';
+        L.marker([lat, lon]).addTo(infraLayer).bindPopup(popupText);
+      }
+    });
+    infraLayer.addTo(map);
+    infraButton.classList.add('active');
+  } catch (error) {
+    console.error('Ошибка отображения инфраструктуры:', error);
+    alert('Не удалось загрузить велоинфраструктуру.');
+  }
+});
+
+// Загрузка GPX
+const gpxButton = document.getElementById('gpx-button');
+const gpxFileInput = document.getElementById('gpx-file-input');
+gpxButton.addEventListener('click', () => {
+  if (gpxLayer) {
+    map.removeLayer(gpxLayer);
+    gpxLayer = null;
+    routeStats.style.display = 'none';
+    gpxButton.classList.remove('active');
+    gpxFileInput.value = '';
+  }
+  gpxFileInput.click();
+});
+
+gpxFileInput.addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = (event) => {
+    try {
+      gpxLayer = new L.GPX(event.target.result, {
+        async: true,
+        marker_options: {
+          startIconUrl: null,
+          endIconUrl: null,
+          shadowUrl: null
+        },
+        polyline_options: {
+          color: '#3388ff',
+          weight: 5,
+          opacity: 0.7
+        }
+      }).on('loaded', (e) => {
+        map.fitBounds(e.target.getBounds());
+        const distance = (e.target.get_distance() / 1000).toFixed(1);
+        const averageSpeed = 15;
+        const time = Math.round((e.target.get_distance() / 1000) / averageSpeed * 60);
+        const elevationGain = e.target.get_elevation_gain().toFixed(0);
+
+        routeDistance.textContent = distance;
+        routeTime.textContent = time;
+        routeElevation.textContent = elevationGain;
+        routeStats.style.display = 'block';
+        gpxButton.classList.add('active');
+      }).addTo(map);
+    } catch (error) {
+      console.error('Ошибка загрузки GPX:', error);
+      alert('Не удалось загрузить GPX-трек.');
+    }
+  };
+  reader.readAsText(file);
 });
 
 // Загружаем сохранённые маркеры при старте

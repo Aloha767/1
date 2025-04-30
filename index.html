@@ -8,12 +8,12 @@
   <!-- Подключаем Leaflet для карты -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <!-- Подключаем стили -->
-  <link rel="stylesheet" href="styles.css">
+  <!-- Подключаем библиотеку leaflet-gpx -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.7.0/gpx.min.js"></script>
   <!-- Подключаем YouTube IFrame Player API -->
   <script src="https://www.youtube.com/iframe_api"></script>
-  <!-- Подключаем скрипты -->
-  <script src="script.js" defer></script>
+  <!-- Подключаем свои стили -->
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="container">
@@ -52,7 +52,10 @@
       <!-- Меню для маршрутов -->
       <div class="route-menu" id="route-menu" style="display: none;">
         <div class="route-menu-content">
-          <h3>Построить маршрут</h3>
+          <div class="route-menu-header">
+            <h3>Построить маршрут</h3>
+            <button class="close-route-menu" id="close-route-menu">×</button>
+          </div>
           <label for="route-mode">Режим:</label>
           <select id="route-mode">
             <option value="road">Дорожный</option>
@@ -65,22 +68,23 @@
           <div class="route-points">
             <div class="route-point">
               <label>Точка А:</label>
+              <input type="text" class="point-input" id="point-a-input" placeholder="Введите адрес">
+              <div class="point-suggestions" id="point-a-suggestions"></div>
               <select class="point-select" id="point-a">
                 <option value="">Выбрать место</option>
-                <!-- Места будут добавлены динамически -->
               </select>
               <button class="set-point" data-point="A">Указать на карте</button>
             </div>
             <div class="route-point">
               <label>Точка Б:</label>
+              <input type="text" class="point-input" id="point-b-input" placeholder="Введите адрес">
+              <div class="point-suggestions" id="point-b-suggestions"></div>
               <select class="point-select" id="point-b">
                 <option value="">Выбрать место</option>
               </select>
               <button class="set-point" data-point="B">Указать на карте</button>
             </div>
-            <div id="waypoints">
-              <!-- Промежуточные точки будут добавлены динамически -->
-            </div>
+            <div id="waypoints"></div>
             <button id="add-waypoint" disabled>Добавить промежуточную точку (0/10)</button>
           </div>
           <button id="clear-route">Очистить маршрут</button>
@@ -111,5 +115,9 @@
       </div>
     </div>
   </div>
+  <!-- Скрытый input для загрузки GPX -->
+  <input type="file" id="gpx-file-input" accept=".gpx" style="display: none;">
+  <!-- Подключаем свои скрипты -->
+  <script src="script.js"></script>
 </body>
 </html>

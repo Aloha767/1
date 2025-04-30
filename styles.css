@@ -29,6 +29,7 @@ body {
   flex-direction: column;
   padding: 5px 10px 10px 10px;
   box-sizing: border-box;
+  position: relative; /* Для позиционирования route-menu */
 }
 
 .search-container {
@@ -49,7 +50,8 @@ body {
   box-sizing: border-box;
 }
 
-.google-login, .logout-button {
+.google-login,
+.logout-button {
   width: 40px;
   height: 40px;
   background: #555;
@@ -184,6 +186,10 @@ body {
   cursor: pointer;
 }
 
+.map-button.active {
+  background: #44ff44; /* Подсветка активных кнопок */
+}
+
 /* Стили для модального окна */
 .modal {
   position: fixed;
@@ -211,7 +217,8 @@ body {
   margin: 0 0 10px;
 }
 
-.modal-content input, .modal-content select {
+.modal-content input,
+.modal-content select {
   width: 100%;
   padding: 10px;
   background: #444;
@@ -251,8 +258,27 @@ body {
   border-radius: 10px;
   z-index: 1000;
   padding: 10px;
-  max-height: 50vh;
-  overflow-y: auto;
+  max-height: 40vh; /* Уменьшили высоту */
+  overflow-y: auto; /* Прокрутка */
+  transition: transform 0.3s ease-in-out; /* Анимация открытия/закрытия */
+}
+
+.route-menu.hidden {
+  transform: translateY(100%); /* Скрываем окно за пределами экрана */
+}
+
+.route-menu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.close-route-menu {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 24px;
+  cursor: pointer;
 }
 
 .route-menu-content {
@@ -270,7 +296,8 @@ body {
   margin-top: 5px;
 }
 
-.route-menu-content select, .route-menu-content button {
+.route-menu-content select,
+.route-menu-content button {
   padding: 8px;
   background: #444;
   border: none;
@@ -303,8 +330,35 @@ body {
   margin: 0;
 }
 
+.point-input {
+  padding: 8px;
+  background: #555;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+}
+
+.point-suggestions {
+  background: #555;
+  border-radius: 5px;
+  max-height: 100px;
+  overflow-y: auto;
+  display: none;
+  z-index: 1001;
+}
+
+.point-suggestion-item {
+  padding: 8px;
+  cursor: pointer;
+}
+
+.point-suggestion-item:hover {
+  background: #666;
+}
+
 .point-select {
   width: 100%;
+  margin-top: 5px;
 }
 
 .waypoint {
@@ -337,7 +391,8 @@ body {
   .container {
     flex-direction: row;
   }
-  .youtube-section, .map-section {
+  .youtube-section,
+  .map-section {
     width: 50%;
     height: 100vh;
     padding: 10px;
