@@ -10,35 +10,41 @@ body {
   overflow: hidden;
 }
 
+/* Контейнер с двумя секциями */
 .container {
+  display: flex;
+  flex-direction: column;
   height: 100vh;
+}
+
+/* Общие стили для секций */
+.section {
+  flex: 1;
   display: flex;
   flex-direction: column;
   padding: 10px;
   box-sizing: border-box;
 }
 
-/* Секции */
-.section {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+/* Поле ввода */
+input[type="text"] {
+  width: 100%;
+  padding: 12px;
+  background: #333;
+  border-radius: 10px;
+  border: none;
+  color: #fff;
+  font-size: 16px;
   margin-bottom: 10px;
+  box-sizing: border-box;
 }
 
-/* Адаптация под горизонтальную ориентацию */
-@media (orientation: landscape) {
-  .container {
-    flex-direction: row;
-  }
-  .section {
-    width: 50%;
-    height: 100vh;
-    padding: 10px;
-  }
+/* YouTube секция */
+.youtube-section {
+  background: #1a1a1a;
 }
 
-/* Картинка и воспроизведение видео */
+/* Плеер YouTube */
 #youtube-player {
   flex: 1;
   background: #222;
@@ -53,9 +59,9 @@ body {
   border-radius: 10px;
 }
 
-/* Результаты поиска */
+/* Результаты поиска YouTube */
 #search-results {
-  height: 100px;
+  flex: 1;
   background: #333;
   border-radius: 10px;
   overflow-y: auto;
@@ -63,11 +69,40 @@ body {
   box-sizing: border-box;
 }
 
-/* Контролы карты */
+/* Картинка и воспроизведение видео */
+.search-result-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.search-result-item img {
+  width: 80px;
+  height: 45px;
+  border-radius: 5px;
+}
+
+/* Карта */
+.map-section {
+  background: #222;
+  position: relative;
+}
+
+/* Карта OpenStreetMap */
+#map {
+  flex: 1;
+  background: #444;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+/* Панель управления картой */
 .map-controls {
   display: flex;
   gap: 10px;
-  margin-top: 10px;
+  margin-top: auto;
 }
 
 .map-button {

@@ -139,3 +139,6 @@ mapSearchInput.addEventListener('input', debounce(async (e) => {
     }
   }
 }, 300));
+
+// Инициализация
+loadLastLocation();
