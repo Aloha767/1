@@ -2,28 +2,34 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>YouTube & Карта</title>
   <link rel="stylesheet" href="style.css" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icon.png" />
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
 <body>
   <div class="container">
-    <!-- YouTube секция (верхние 50%) -->
+    <!-- YouTube секция -->
     <div class="section youtube-section">
       <input type="text" id="youtube-search" placeholder="Поиск видео" />
       <div id="youtube-player"></div>
-      <div id="search-results"></div>
+      <div id="search-results" class="dropdown"></div>
     </div>
 
-    <!-- Карта (нижние 50%) -->
+    <!-- Карта -->
     <div class="section map-section">
       <div id="map"></div>
       <div class="map-controls">
         <input type="text" id="map-search" placeholder="Поиск места" />
         <button id="geo-button">📍</button>
-        <button id="last-location-btn">⏮️</button>
+        <button>🔍</button>
+        <button>⚙️</button>
+        <button>❓</button>
       </div>
     </div>
   </div>
