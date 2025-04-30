@@ -10,7 +10,6 @@ body {
   overflow: hidden;
 }
 
-/* Контейнер секций */
 .container {
   height: 100vh;
   display: flex;
@@ -19,7 +18,7 @@ body {
   box-sizing: border-box;
 }
 
-/* Общие стили для секций */
+/* Секции */
 .section {
   flex: 1;
   display: flex;
@@ -27,17 +26,16 @@ body {
   margin-bottom: 10px;
 }
 
-/* Поля ввода */
-input[type="text"] {
-  width: 100%;
-  padding: 12px;
-  background: #333;
-  border-radius: 10px;
-  border: none;
-  color: #fff;
-  font-size: 16px;
-  margin-bottom: 10px;
-  box-sizing: border-box;
+/* Адаптация под горизонтальную ориентацию */
+@media (orientation: landscape) {
+  .container {
+    flex-direction: row;
+  }
+  .section {
+    width: 50%;
+    height: 100vh;
+    padding: 10px;
+  }
 }
 
 /* Картинка и воспроизведение видео */
@@ -65,20 +63,6 @@ input[type="text"] {
   box-sizing: border-box;
 }
 
-.search-result-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 5px;
-  cursor: pointer;
-}
-
-.search-result-item img {
-  width: 80px;
-  height: 45px;
-  border-radius: 5px;
-}
-
 /* Контролы карты */
 .map-controls {
   display: flex;
@@ -99,16 +83,4 @@ input[type="text"] {
 
 .map-button:hover {
   background: #777;
-}
-
-/* Адаптация под горизонтальную ориентацию (iPhone 11) */
-@media (orientation: landscape) {
-  .container {
-    flex-direction: row;
-  }
-  .section {
-    width: 50%;
-    height: 100vh;
-    padding: 10px;
-  }
 }
