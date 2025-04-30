@@ -1,42 +1,43 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <title>YouTube & Карта</title>
-  <link rel="stylesheet" href="style.css" />
-  <link rel="manifest" href="manifest.json" />
-  <link rel="apple-touch-icon" href="icon.png" />
-  <!-- Leaflet CSS -->
+  <meta name="theme-color" content="#000000" />
+  <title>YouTube & OSM App</title>
+  <!-- Подключаем Leaflet для карты -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="favicon.ico" />
+  <link rel="apple-touch-icon" href="icons/icon-192x192.png" />
 </head>
 <body>
   <div class="container">
-    <!-- YouTube секция -->
-    <div class="section youtube-section">
-      <input type="text" id="youtube-search" placeholder="Поиск видео" />
-      <div id="youtube-player"></div>
-      <div id="search-results" class="dropdown"></div>
+    <div class="youtube-section">
+      <input type="text" class="search-bar" id="youtube-search" placeholder="Search YouTube">
+      <div class="youtube-player" id="youtube-player"></div>
+      <div class="search-results" id="search-results"></div>
     </div>
-
-    <!-- Карта -->
-    <div class="section map-section">
-      <div id="map"></div>
+    <div class="map-section">
+      <div class="map-container" id="map"></div>
       <div class="map-controls">
-        <input type="text" id="map-search" placeholder="Поиск места" />
-        <button id="geo-button">📍</button>
-        <button>🔍</button>
-        <button>⚙️</button>
-        <button>❓</button>
+        <input type="text" class="map-search" id="map-search" placeholder="Search Location">
+        <div class="map-button" id="geo-button">Geo</div>
+        <div class="map-button">Btn 2</div>
+        <div class="map-button">Btn 3</div>
+        <div class="map-button">Btn 4</div>
       </div>
     </div>
   </div>
 
-  <!-- Скрипты -->
+  <!-- Подключаем скрипты -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://www.youtube.com/iframe_api" defer></script>
-  <script src="script.js" defer></script>
+  <script src="scripts/utils.js" defer></script>
+  <script src="scripts/youtube.js" defer></script>
+  <script src="scripts/osm.js" defer></script>
+  <script src="scripts/main.js" defer></script>
 </body>
 </html>

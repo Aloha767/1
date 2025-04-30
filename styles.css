@@ -1,71 +1,61 @@
-/* Полноэкранный режим */
-html, body {
+body {
   margin: 0;
-  padding: 0;
-  height: 100%;
-  background: #1a1a1a;
+  background: #000;
+  color: #fff;
   font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .container {
+  height: 100vh;
   display: flex;
   flex-direction: column;
-  height: 100vh;
+}
+
+.youtube-section, .map-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   padding: 10px;
   box-sizing: border-box;
 }
 
-/* Общие стили для секций */
-.section {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 10px;
-  border-radius: 16px;
-  overflow: hidden;
-}
-
-/* YouTube секция */
-.youtube-section {
-  background: #1a1a1a;
-}
-
-/* Поле ввода */
-input[type="text"] {
+.search-bar, .map-search {
   width: 100%;
-  padding: 12px;
-  background: #222;
+  padding: 10px;
+  background: #333;
+  border-radius: 10px;
   border: none;
-  border-radius: 16px;
   color: #fff;
   font-size: 16px;
   margin-bottom: 10px;
+  box-sizing: border-box;
 }
 
-/* Плеер YouTube */
-#youtube-player {
+.youtube-player {
   flex: 1;
   background: #222;
+  border-radius: 10px;
+  margin-bottom: 10px;
   position: relative;
 }
 
-#youtube-player iframe {
+.youtube-player iframe {
   width: 100%;
   height: 100%;
-  border-radius: 16px;
+  border-radius: 10px;
 }
 
-/* Выпадающий список результатов */
-.dropdown {
-  position: absolute;
-  width: calc(100% - 24px);
-  max-height: 150px;
-  background: #222;
-  border-radius: 16px;
-  overflow-y: auto;
-  z-index: 10;
-  margin-top: 10px;
+.search-results {
+  height: 100px;
+  background: #333;
+  border-radius: 10px;
+  overflow-y: scroll;
   padding: 5px;
+  box-sizing: border-box;
 }
 
 .search-result-item {
@@ -74,56 +64,49 @@ input[type="text"] {
   gap: 10px;
   padding: 5px;
   cursor: pointer;
-  transition: background 0.3s ease;
 }
 
 .search-result-item img {
   width: 80px;
   height: 45px;
-  border-radius: 8px;
+  border-radius: 5px;
 }
 
-.search-result-item:hover {
-  background: #333;
-}
-
-/* Карта */
-.map-section {
-  background: #1a1a1a;
-}
-
-#map {
+.map-container {
   flex: 1;
   background: #222;
-  border-radius: 16px;
-  overflow: hidden;
+  border-radius: 10px;
+  margin-bottom: 10px;
 }
 
-/* Панель управления картой */
 .map-controls {
   display: flex;
   gap: 10px;
-  padding: 12px;
-  background: #222;
-  border-radius: 16px;
-  margin-top: 10px;
 }
 
-.map-controls input {
+.map-button {
   flex: 1;
-  margin: 0;
-}
-
-.map-controls button {
-  padding: 12px;
-  background: #333;
-  border: none;
-  border-radius: 16px;
+  padding: 10px;
+  background: #555;
+  border-radius: 10px;
+  text-align: center;
   font-size: 16px;
-  color: #fff;
-  transition: background 0.3s ease;
+  box-sizing: border-box;
+  height: 40px;
+  line-height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
 
-.map-controls button:hover {
-  background: #444;
+@media (orientation: landscape) {
+  .container {
+    flex-direction: row;
+  }
+  .youtube-section, .map-section {
+    width: 50%;
+    height: 100vh;
+    padding: 10px;
+  }
 }
